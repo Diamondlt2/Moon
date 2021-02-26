@@ -1217,6 +1217,7 @@ function Material.Load(Config)
 					DropdownCallback(Value)
                     DropdownTitle.Text = DropdownText..": "..Value
                     DropdownTextbox.Visible = false
+                    DropdownTitle.Visible = true
 				end)
 			end)
 
@@ -1226,6 +1227,7 @@ function Material.Load(Config)
 				TweenService:Create(DropdownContent, TweenInfo.new(0.15), {Size = DropToggle and DropdownSize or UDim2.fromScale(1,0)}):Play()
                 TweenService:Create(Dropdown, TweenInfo.new(0.15), {Size = DropToggle and (DropdownSize + UDim2.fromOffset(0,35)) or (UDim2.fromScale(1,0) + UDim2.fromOffset(0,30))}):Play()
                 DropdownTextbox.Visible = true
+                DropdownTitle.Visible = false
             end)
             
             DropdownTextbox.Changed:Connect(function()
