@@ -1148,7 +1148,17 @@ function Material.Load(Config)
 			DropdownTitle.TextColor3 = Color3.fromRGB(255,255,255)
 			DropdownTitle.TextTransparency = 1
 			DropdownTitle.TextSize = 14
-			DropdownTitle.Parent = DropdownBar
+            DropdownTitle.Parent = DropdownBar
+            
+            local DropdownTextbox = Objects.new("Box")
+			DropdownTextbox.Name = "Textbox"
+			DropdownTextbox.Font = Enum.Font.GothamSemibold
+			DropdownTextbox.Text = ""
+			DropdownTextbox.TextColor3 = Color3.fromRGB(255,255,255)
+			DropdownTextbox.TextTransparency = 1
+			DropdownTextbox.TextSize = 14
+            DropdownTextbox.Parent = DropdownBar
+            DropdownTextbox.Visible = false
 
 			local DropdownToggle = Objects.new("Round")
 			DropdownToggle.Name = "Container"
@@ -1205,7 +1215,8 @@ function Material.Load(Config)
 				NewButton.Size = UDim2.fromScale(1,0) + UDim2.fromOffset(0,20)
 				NewButton.MouseButton1Down:Connect(function()
 					DropdownCallback(Value)
-					DropdownTitle.Text = DropdownText..": "..Value
+                    DropdownTitle.Text = DropdownText..": "..Value
+                    DropdownTextbox.Visible = false
 				end)
 			end)
 
@@ -1213,8 +1224,38 @@ function Material.Load(Config)
 				DropToggle = not DropToggle
 				TweenService:Create(DropdownButton, TweenInfo.new(0.15), {Rotation = DropToggle and 135 or 0}):Play()
 				TweenService:Create(DropdownContent, TweenInfo.new(0.15), {Size = DropToggle and DropdownSize or UDim2.fromScale(1,0)}):Play()
-				TweenService:Create(Dropdown, TweenInfo.new(0.15), {Size = DropToggle and (DropdownSize + UDim2.fromOffset(0,35)) or (UDim2.fromScale(1,0) + UDim2.fromOffset(0,30))}):Play()
-			end)
+                TweenService:Create(Dropdown, TweenInfo.new(0.15), {Size = DropToggle and (DropdownSize + UDim2.fromOffset(0,35)) or (UDim2.fromScale(1,0) + UDim2.fromOffset(0,30))}):Play()
+                DropdownTextbox.Visible = true
+            end)
+            
+            DropdownTextbox.Changed:Connect(function()
+                local Entry = DropdownTextbox.Text:lower();
+    
+                if(Entry ~= "") then
+                    for i,v in next, DropdownContent:GetChildren() do
+                        if(not v:IsA("UIPadding") and not v:IsA("UIListLayout")) then
+                            local button = v:FindFirstChild("Button");
+    
+                            if(button and button:FindFirstChild("TextLabel") and button.TextLabel.Text:gsub("%s", ""):lower():sub(1, #Entry) == Entry) then
+                                v.Visible = true;
+                                find = true;
+                            end;
+    
+                            if(not find) then
+                                v.Visible = false;
+                            end;
+                        end;
+                    end;
+                elseif library.currentSection then
+                    for i,v in next, library.currentSection:GetChildren() do
+                        if(not v:IsA("UIPadding") and not v:IsA("UIListLayout")) then
+                            v.Visible = true;
+                        end;
+                    end;
+                end;
+    
+                library.currentSectionObject:Update();
+            end);
 
 			local MenuAdded, MenuButton = TryAddMenu(DropdownBar, Menu, {})
 
