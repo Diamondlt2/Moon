@@ -1246,15 +1246,14 @@ function Material.Load(Config)
                             end;
                         end;
                     end;
-                elseif library.currentSection then
-                    for i,v in next, library.currentSection:GetChildren() do
+                elseif DropdownContent then
+                    for i,v in next, DropdownContent:GetChildren() do
                         if(not v:IsA("UIPadding") and not v:IsA("UIListLayout")) then
                             v.Visible = true;
                         end;
                     end;
                 end;
     
-                library.currentSectionObject:Update();
             end);
 
 			local MenuAdded, MenuButton = TryAddMenu(DropdownBar, Menu, {})
